@@ -15,13 +15,14 @@ goslimobos=goslim_*.obo
 gogenericobo="go-basic.obo"
 
 # si DE
-colGO=11
-colFC=8
+colGO=10
+colFC=7
 
 # si pas de DE
-colGO=3
-colFC="NA"
+#colGO=3
+#colFC="NA"
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 inputbasename=`basename $input | sed "s/\.[a-z]\+$//"`
 # echo $inputbasename
@@ -38,7 +39,7 @@ for goslimobo in ${goslimobos[*]}; do
   map2slim $goslimobo $gogenericobo $inputbasename.formatted.tab -o $inputbasename.$goslim.tab &&
 
   echo -e "\t$goslim: go2goterm" > /dev/stderr  &&
-  ./go2goterm.pl $inputbasename.$goslim.tab $gogenericobo > $inputbasename.$goslim.term.tab &&
+  $DIR/go2goterm.pl $inputbasename.$goslim.tab $gogenericobo | sort | uniq > $inputbasename.$goslim.term.tab &&
   mv $inputbasename.$goslim.term.tab $inputbasename.$goslim.tab &&
 
   echo -e "\t$goslim: counting" > /dev/stderr  &&
@@ -46,6 +47,6 @@ for goslimobo in ${goslimobos[*]}; do
   sort $inputbasename.$goslim.tab | uniq | awk -F "\t" '{ gsub(/ /,"_",$6) } { print $4,$5,$6,$7 }' | sort | uniq -c | awk '{ print $3"_"$4"\t"$5"\t"$1*$2 }' > $inputbasename.$goslim.count.tab &&
 
   echo -e "\t$goslim: graph" > /dev/stderr  &&
-  ./goGraph.r $inputbasename.$goslim.count.tab
+  $DIR/goGraph.r $inputbasename.$goslim.count.tab
 
 done

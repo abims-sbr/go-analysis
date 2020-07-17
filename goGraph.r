@@ -1,4 +1,4 @@
-#!/usr/local/public/bin/Rscript
+#!/usr/bin/env Rscript
 
 # inputs
 #
